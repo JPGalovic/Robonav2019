@@ -90,7 +90,7 @@ The agent returns to the origin before proceeding to the next node in the queue,
   } while (!queue.empty())
 ```
 
-##### Custom Un-informed Search Algorithm 1 (CUS1)
+##### Custom Un-informed Search Algorithm (CUS1)
 The custom un-informed search algorithm is based on the array sorting method known as pogo-sort, it is a ineffective search alogithm. the design of the algorithem uses an agent lifespan and is based on the following psedo-code
 
 ```c++
@@ -102,6 +102,61 @@ while(Agent.isAlive())
 }
 ```
 In this implementation the life of the agent is limited at 1000 movements.
+
+#### Informed Algorithms
+Three informed Algorithms have been defined, Greedy Best-first Search, A* (A Star) as well as a Custom informed algorithem based on the that thanks to been informed can use simaltanious breadth-first search (multithreaded with locked visited list).
+
+##### Distance Cost and Heuristic Cost Estimate
+The greedy best-first search and A* search algorithms require a auxiluary cost calulation method to work correctly. two such fuctions have been developed. calculating the cost based on the positioning of a to and from node on the grid.
+
+```c++
+int HeuristicCostEstimate(Grid::Cell & aFrom, Grid::Cell & aTo);
+int CalculateDistance(Coordinate & aFrom, Coordinate & aTo);
+```
+
+Both functions use a sell known distance method known as Euclidian Distance, this is an "as the bird flys distance" it is calulated using Pythagoras' theorem, where the euclidian distance between two points squared is the differance in x squared and the differnce in y squared (a^2 + b^2 = c^2).
+
+in adition to this another common measurement method, which is used in the Heuristic Cost Estimate, is Manhattan distance, i.e. the distance required to travel along the x and y paths.
+
+the final heuristic cost estimate used is the sum of euclidan and manhatten distances.
+
+##### Greedy Best-first Search (GBFS)
+
+##### A* ("AStar") (AS)
+The A* search algoithm uses both the cost to travel from the starting point to the node, as well as the cost to travel from the node to the goal to assess the node to determine the best path. the function is built on the following psudo-code
+
+```c++
+initalise a grid to store the fScores and gScores for nodes, as well as a grid to contain direction of the best node to travel to this node.
+the gScore of moving from stat to start is 0
+the fScore of moving from the start to goal is purely heuristic
+
+initalise openlist containing starting node.
+
+while(!openList.empty())
+{
+  get next node from open list with lowest fScore;
+  
+  if(node is at goal)
+    construct path;
+    
+  move current node to closedList;
+  
+  foreach(validDirection)
+  {
+    if(validDirection isnt in closedList)
+    {
+      if(validDirection isnt in openList)
+        add validDirection to openList;
+    }
+    
+    Calculate GScores and FScores
+    
+    If better path to currentNode found record it
+  }
+}
+```
+
+##### Custom Informed Search Algorithem (CUS2)
 
 ## Featurs/Bugs/Missing
 
