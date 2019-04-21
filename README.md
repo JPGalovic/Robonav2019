@@ -45,6 +45,64 @@ Lines 0 - 3 contain crucial information for producing the enviroment. Descriptio
 ...                 // N number of walls may be definied
 ```
 
+### Agent
+The Agent (Robot) contains the required functionality to manover arround the Grid, keep track of its position and determine which paths it is able to take, and weather it is at a goal state.
+
+While the agent contains a pointer the the Grid, it is not used internally for any path-finding, infact all search algorithms are external to the Agent Object.
+
+In adition to the Agent Class, the header (and thus source) of the Agent also contain descrete functions for each Search Algorithem, as well as the auxiliary functions where required.
+
+#### Un-Informed Algorithms
+Three un-informed Algorithms have been defined, common tree-search methods, Depth-first Search and Breadth-first Search, as well as a Custom un-informed algorithem based on the sorting method known as "pogo-sort"
+
+##### Depth-first Search (DFS)
+The depth-first search algorithem is built on a recursive - tree builder, requireing one overload function to fit within a stardard call format. initally the DFS function is called and a referance to the agent provided. the function generates a vector to store the coordinates of visited nodes, and calls the aux. function that process the recussive pattern of the algorithm, this works on the following psedo-code
+
+```c++
+  if(Agent.atGoal())
+    return path;
+    
+  foreach(valid connection)
+    if(!visited)
+      visit();
+      
+  goback();
+```
+
+##### Breadth-first Search (BFS)
+The breadth-first seach algorithm is designed to assess each node on a given level before moving to the next, the agent achives this by constructing a queue of nodes to search, and visits the dermined node, adding the valid nodes from that point to the back of the queue.
+because the agent is only able to see the node it is currently located at, the agent needs to travel to the given node to assess it. as such the implementaion of this algorithems contains rules for paths from the origin to each node based on the algorithem.
+
+The agent returns to the origin before proceeding to the next node in the queue, until a goal is reached, or all paths are fully explored. the algoithem is designed arround the following psedo-code
+
+```c++
+  do
+  {
+    foreach(valid connection)
+      enqueue.(path to valid connection);
+    
+    move to origin node;
+    move to next node in queue;
+    
+    if(Agent.atGoal())
+      return path;
+      
+  } while (!queue.empty())
+```
+
+##### Custom Un-informed Search Algorithm 1 (CUS1)
+The custom un-informed search algorithm is based on the array sorting method known as pogo-sort, it is a ineffective search alogithm. the design of the algorithem uses an agent lifespan and is based on the following psedo-code
+
+```c++
+while(Agent.isAlive())
+{
+  Move in a random direction();
+  if(Agent.atGoal())
+      return path;
+}
+```
+In this implementation the life of the agent is limited at 1000 movements.
+
 ## Featurs/Bugs/Missing
 
 ## Research
