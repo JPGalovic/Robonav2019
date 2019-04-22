@@ -157,6 +157,19 @@ while(!openList.empty())
 ```
 
 ##### Custom Informed Search Algorithem (CUS2)
+The second Custom Search Algorithem is designed as a Threaded Informed Simaltanious Node search.
+It uses a combination of an informed depth first search algorithem and along with threading to allow simaltaniuos path determination, without the need for the agent to move to search.
+
+each thread will assess a single node, producing aditional threads to assess valid, un-visited nodes. the threads will follow the following psudo-code
+
+```c++
+  if(thisCell.atGoal())
+    generate path;
+    
+  foreach(valid connection)
+    if(!visited)
+      start new thread to visit();
+```
 
 ## Featurs/Bugs/Missing
 
