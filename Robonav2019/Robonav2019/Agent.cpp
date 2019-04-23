@@ -6,6 +6,10 @@
 #include <iostream>
 #include <queue>
 #include <cstdlib>
+#include <thread>
+#include <mutex>
+
+std::mutex gMtx; // Mutex for thread locking
 
 Agent::Agent(Grid & aGrid)
 {
@@ -488,6 +492,192 @@ std::vector<Cardinal> GBFS(Agent & aAgent, Grid & aGrid)
 	// Map to contain best path
 	Grid lCameFrom(CardinalStrings[NONE], aGrid.getWidth(), aGrid.getHeight());
 
+	// Map containing cost to get from start to goal via node.
+	// Cost of moving from start to goal is purly heuristic.
+	std::vector<Grid> lFScores;
+	for (int i = 0; i < aGrid.getGoalCount(); i++)
+	{
+		lFScores.push_back(Grid(std::to_string(std::numeric_limits<int>::max()), aGrid.getWidth(), aGrid.getHeight()));
+		lFScores[i].setCellValue(std::to_string(HeuristicCostEstimate(aGrid.getCell(aGrid.getStartingLocation().getX(), aGrid.getStartingLocation().getY()), aGrid.getCell(aGrid.getGoalLocation(i).getX(), aGrid.getGoalLocation(i).getY()))), aGrid.getStartingLocation().getX(), aGrid.getStartingLocation().getY());
+	}
+
+	// While open list is not empty...
+	while (!lOpen.empty())
+	{
+		// Get next from open list with lowest FScore
+		Grid::Cell * lCurrent = &aGrid.getCell(lOpen[0]);
+		Coordinate lCurrentCoordinate;
+		int lCurrentFValue = std::numeric_limits<int>::max();
+
+		for (int i = 0; i < lOpen.size(); i++)
+		{
+			for (int j = 0; j < lFScores.size(); j++)
+			{
+				if (std::atoi(lFScores[j].getCell(lOpen[i]).getValue().c_str()) < lCurrentFValue)
+				{
+					lCurrent = &aGrid.getCell(lOpen[i]);
+					lCurrentCoordinate = lCurrent->getCoordinate();
+					lCurrentFValue = std::atoi(lFScores[j].getCell(lCurrentCoordinate).getValue().c_str());
+				}
+			}
+		}
+
+		// Check is current cell is a goal.
+		if (aGrid.goalAt(lCurrentCoordinate))
+		{
+			// Produce movement path.
+			std::vector<Cardinal> lPath;
+			Coordinate lCell = lCurrentCoordinate;
+
+			print(lCameFrom);
+
+			while (lCell != aGrid.getStartingLocation())
+			{
+				std::string lDir = lCameFrom.getCellValue(lCell.getX(), lCell.getY());
+				if (lDir == "NORTH")
+				{
+					lPath.push_back(SOUTH);
+					lCell = lCameFrom.getCell(lCell).getNorth().getCoordinate();
+				}
+				else if (lDir == "WEST")
+				{
+					lPath.push_back(EAST);
+					lCell = lCameFrom.getCell(lCell).getWest().getCoordinate();
+				}
+				else if (lDir == "SOUTH")
+				{
+					lPath.push_back(NORTH);
+					lCell = lCameFrom.getCell(lCell).getSouth().getCoordinate();
+				}
+				else if (lDir == "EAST")
+				{
+					lPath.push_back(WEST);
+					lCell = lCameFrom.getCell(lCell).getEast().getCoordinate();
+				}
+				else
+				{
+					break;
+				}
+			}
+
+			std::vector<Cardinal> lPathResult;
+			for (int i = lPath.size() - 1; i >= 0; i--)
+				lPathResult.push_back(lPath[i]);
+
+			// Move agent to goal.
+			for (int i = 0; i < lPathResult.size(); i++)
+				aAgent.move(lPathResult[i]);
+
+			return lPathResult;
+		}
+
+		// Move current from open to closed list.
+		std::vector<Coordinate> lTemp;
+		for (int i = 0; i < lOpen.size(); i++)
+			if (lOpen[i] == lCurrentCoordinate)
+				lClosed.push_back(lOpen[i]);
+			else
+				lTemp.push_back(lOpen[i]);
+
+		lOpen.clear();
+		lOpen = lTemp;
+
+		// Check each direction, adding node to open list if not in open or closed lists
+		for (int i = 0; i < 4; i++)
+		{
+			Cardinal lCameFromDirection = NONE;
+			Coordinate lDirection;
+
+			switch (i)
+			{
+			case 0:
+				if (lCurrent->hasNorth())
+					if (lCurrent->getNorth().getValue() != "WAL")
+					{
+						lCameFromDirection = SOUTH;
+						lDirection = lCurrent->getNorth().getCoordinate();
+						break;
+					}
+				continue;
+			case 1:
+				if (lCurrent->hasWest())
+					if (lCurrent->getWest().getValue() != "WAL")
+					{
+						lCameFromDirection = EAST;
+						lDirection = lCurrent->getWest().getCoordinate();
+						break;
+					}
+				continue;
+			case 2:
+				if (lCurrent->hasSouth())
+					if (lCurrent->getSouth().getValue() != "WAL")
+					{
+						lCameFromDirection = NORTH;
+						lDirection = lCurrent->getSouth().getCoordinate();
+						break;
+					}
+				continue;
+			case 3:
+				if (lCurrent->hasEast())
+					if (lCurrent->getEast().getValue() != "WAL")
+					{
+						lCameFromDirection = WEST;
+						lDirection = lCurrent->getEast().getCoordinate();
+						break;
+					}
+				continue;
+			}
+
+			// if node is closed, continue to next node
+			bool lInClosed = false;
+			for (int j = 0; j < lClosed.size(); j++)
+				if (lClosed[j] == lDirection)
+					lInClosed = true;
+			if (lInClosed)
+				continue;
+
+			// if node is not open, add to open
+			bool lInOpen = false;
+			for (int j = 0; j < lOpen.size(); j++)
+			{
+				if (lOpen[j] == lDirection)
+				{
+					lInOpen = true;
+					break;
+				}
+			}
+
+			if (!lInOpen)
+				lOpen.push_back(lDirection);
+
+			// Calculate FScore.
+			lCameFrom.setCellValue(CardinalStrings[lCameFromDirection], lDirection.getX(), lDirection.getY());
+			for (int j = 0; j < lFScores.size(); j++)
+			{
+				int lFTempScore = HeuristicCostEstimate(aGrid.getCell(lDirection), aGrid.getCell(aGrid.getGoalLocation(j).getX(), aGrid.getGoalLocation(j).getY()));
+				lFScores[j].setCellValue(std::to_string(lFTempScore), lDirection.getX(), lDirection.getY());
+			}
+		}
+	}
+
+	// No path found, return empty list.
+	return std::vector<Cardinal>();
+}
+
+/**
+ * A-Star Search Algorithem.
+ * Use both the cost to reach the goal from the current node and the cost to reach this node to evaluate the node.
+ */
+std::vector<Cardinal> AS(Agent & aAgent, Grid & aGrid)
+{
+	// Vectors for open and closed nodes.
+	// Open list by default gets agent starting location added.
+	std::vector<Coordinate> lOpen; std::vector<Coordinate> lClosed;
+	lOpen.push_back(aGrid.getStartingLocation());
+
+	// Map to contain best path
+	Grid lCameFrom(CardinalStrings[NONE], aGrid.getWidth(), aGrid.getHeight());
+
 	// Map to contain cost to get to node from start.
 	// Cost of moving from start -> start is 0;
 	Coordinate lStart = aGrid.getStartingLocation();
@@ -674,195 +864,110 @@ std::vector<Cardinal> GBFS(Agent & aAgent, Grid & aGrid)
 	return std::vector<Cardinal>();
 }
 
-/**
- * A-Star Search Algorithem.
- * Use both the cost to reach the goal from the current node and the cost to reach this node to evaluate the node.
- */
-std::vector<Cardinal> AS(Agent & aAgent, Grid & aGrid)
-{
-	// Vectors for open and closed nodes.
-	// Open list by default gets agent starting location added.
-	std::vector<Coordinate> lOpen; std::vector<Coordinate> lClosed;
-	lOpen.push_back(aGrid.getStartingLocation());
-
-	// Map to contain best path
-	Grid lCameFrom(CardinalStrings[NONE], aGrid.getWidth(), aGrid.getHeight());
-
-	// Map containing cost to get from start to goal via node.
-	// Cost of moving from start to goal is purly heuristic.
-	std::vector<Grid> lFScores;
-	for (int i = 0; i < aGrid.getGoalCount(); i++)
-	{
-		lFScores.push_back(Grid(std::to_string(std::numeric_limits<int>::max()), aGrid.getWidth(), aGrid.getHeight()));
-		lFScores[i].setCellValue(std::to_string(HeuristicCostEstimate(aGrid.getCell(aGrid.getStartingLocation().getX(), aGrid.getStartingLocation().getY()), aGrid.getCell(aGrid.getGoalLocation(i).getX(), aGrid.getGoalLocation(i).getY()))), aGrid.getStartingLocation().getX(), aGrid.getStartingLocation().getY());
-	}
-
-	// While open list is not empty...
-	while (!lOpen.empty())
-	{
-		// Get next from open list with lowest FScore
-		Grid::Cell * lCurrent = &aGrid.getCell(lOpen[0]);
-		Coordinate lCurrentCoordinate;
-		int lCurrentFValue = std::numeric_limits<int>::max();
-
-		for (int i = 0; i < lOpen.size(); i++)
-		{
-			for (int j = 0; j < lFScores.size(); j++)
-			{
-				if (std::atoi(lFScores[j].getCell(lOpen[i]).getValue().c_str()) < lCurrentFValue)
-				{
-					lCurrent = &aGrid.getCell(lOpen[i]);
-					lCurrentCoordinate = lCurrent->getCoordinate();
-					lCurrentFValue = std::atoi(lFScores[j].getCell(lCurrentCoordinate).getValue().c_str());
-				}
-			}
-		}
-
-		// Check is current cell is a goal.
-		if (aGrid.goalAt(lCurrentCoordinate))
-		{
-			// Produce movement path.
-			std::vector<Cardinal> lPath;
-			Coordinate lCell = lCurrentCoordinate;
-
-			print(lCameFrom);
-
-			while (lCell != aGrid.getStartingLocation())
-			{
-				std::string lDir = lCameFrom.getCellValue(lCell.getX(), lCell.getY());
-				if (lDir == "NORTH")
-				{
-					lPath.push_back(SOUTH);
-					lCell = lCameFrom.getCell(lCell).getNorth().getCoordinate();
-				}
-				else if (lDir == "WEST")
-				{
-					lPath.push_back(EAST);
-					lCell = lCameFrom.getCell(lCell).getWest().getCoordinate();
-				}
-				else if (lDir == "SOUTH")
-				{
-					lPath.push_back(NORTH);
-					lCell = lCameFrom.getCell(lCell).getSouth().getCoordinate();
-				}
-				else if (lDir == "EAST")
-				{
-					lPath.push_back(WEST);
-					lCell = lCameFrom.getCell(lCell).getEast().getCoordinate();
-				}
-				else
-				{
-					break;
-				}
-			}
-
-			std::vector<Cardinal> lPathResult;
-			for (int i = lPath.size() - 1; i >= 0; i--)
-				lPathResult.push_back(lPath[i]);
-
-			// Move agent to goal.
-			for (int i = 0; i < lPathResult.size(); i++)
-				aAgent.move(lPathResult[i]);
-
-			return lPathResult;
-		}
-
-		// Move current from open to closed list.
-		std::vector<Coordinate> lTemp;
-		for (int i = 0; i < lOpen.size(); i++)
-			if (lOpen[i] == lCurrentCoordinate)
-				lClosed.push_back(lOpen[i]);
-			else
-				lTemp.push_back(lOpen[i]);
-
-		lOpen.clear();
-		lOpen = lTemp;
-
-		// Check each direction, adding node to open list if not in open or closed lists
-		for (int i = 0; i < 4; i++)
-		{
-			Cardinal lCameFromDirection = NONE;
-			Coordinate lDirection;
-
-			switch (i)
-			{
-			case 0:
-				if(lCurrent->hasNorth())
-					if (lCurrent->getNorth().getValue() != "WAL")
-					{
-						lCameFromDirection = SOUTH;
-						lDirection = lCurrent->getNorth().getCoordinate();
-						break;
-					}
-				continue;
-			case 1:
-				if (lCurrent->hasWest())
-					if (lCurrent->getWest().getValue() != "WAL")
-					{
-						lCameFromDirection = EAST;
-						lDirection = lCurrent->getWest().getCoordinate();
-						break;
-					}
-				continue;
-			case 2:
-				if (lCurrent->hasSouth())
-					if (lCurrent->getSouth().getValue() != "WAL")
-					{
-						lCameFromDirection = NORTH;
-						lDirection = lCurrent->getSouth().getCoordinate();
-						break;
-					}
-				continue;
-			case 3:
-				if (lCurrent->hasEast())
-					if (lCurrent->getEast().getValue() != "WAL")
-					{
-						lCameFromDirection = WEST;
-						lDirection = lCurrent->getEast().getCoordinate();
-						break;
-					}
-				continue;
-			}
-
-			// if node is closed, continue to next node
-			bool lInClosed = false;
-			for (int j = 0; j < lClosed.size(); j++)
-				if(lClosed[j] == lDirection)
-					lInClosed = true;
-			if (lInClosed)
-				continue;
-
-			// if node is not open, add to open
-			bool lInOpen = false;
-			for (int j = 0; j < lOpen.size(); j++)
-			{
-				if (lOpen[j] == lDirection)
-				{
-					lInOpen = true;
-					break;
-				}
-			}
-
-			if (!lInOpen)
-				lOpen.push_back(lDirection);
-
-			// Calculate FScore.
-			lCameFrom.setCellValue(CardinalStrings[lCameFromDirection], lDirection.getX(), lDirection.getY());
-			for (int j = 0; j < lFScores.size(); j++)
-			{
-				int lFTempScore = HeuristicCostEstimate(aGrid.getCell(lDirection), aGrid.getCell(aGrid.getGoalLocation(j).getX(), aGrid.getGoalLocation(j).getY()));
-				lFScores[j].setCellValue(std::to_string(lFTempScore), lDirection.getX(), lDirection.getY());
-			}
-		}
-	}
-
-	// No path found, return empty list.
-	return std::vector<Cardinal>();
-}
-
 std::vector<Cardinal> CUS2(Agent & aAgent, Grid & aGrid)
 {
-	return std::vector<Cardinal>();
+	bool lGoalFound = false;
+
+	std::vector<Coordinate> lVisited;
+	lVisited.push_back(aAgent.getCoordinate()); // Add inital location to visited list.
+
+	std::vector<Cardinal> lPathToGoal;
+
+	CUS2Thread(aGrid, aAgent.getCoordinate(), lVisited, std::vector<Cardinal>(), lGoalFound, lPathToGoal);
+
+	// if goal has been found move agent to goal.
+	if(lGoalFound)
+		for (int i = 0; i < lPathToGoal.size(); i++)
+			aAgent.move(lPathToGoal[i]);
+
+	return lPathToGoal;
+}
+
+void CUS2Thread(Grid & aGrid, Coordinate aThisCell, std::vector<Coordinate>& aVisited, std::vector<Cardinal> aPathToHere, bool & aGoalFound, std::vector<Cardinal> & aPathToGoal)
+{
+	// Check if this cell is at goal
+	if (aGrid.goalAt(aThisCell))
+	{
+		bool lFound = true;
+		aGoalFound = lFound;
+		aPathToGoal = aPathToHere;
+		return;
+	}
+
+	// Get the details for each valid cell for aditional threads to assess.
+	std::vector<Coordinate> lValidCells;
+	std::vector<std::vector<Cardinal>> lPathToCells;
+
+	for (int i = 0; i < 4; i++)
+	{
+		Coordinate lDirection;
+		Cardinal lMovement;
+		bool lVisited = false;
+		switch (i)
+		{
+		case NORTH:
+			if (aGrid.getCell(aThisCell).hasNorth())
+				lDirection = aGrid.getCell(aThisCell).getNorth().getCoordinate();
+			else
+				continue;
+			lMovement = NORTH;
+			break;
+		case WEST:
+			if(aGrid.getCell(aThisCell).hasWest())
+				lDirection = aGrid.getCell(aThisCell).getWest().getCoordinate();
+			else 
+				continue;
+			lMovement = WEST;
+			break;
+		case SOUTH:
+			if (aGrid.getCell(aThisCell).hasSouth())
+				lDirection = aGrid.getCell(aThisCell).getSouth().getCoordinate();
+			else
+				continue;
+			lMovement = SOUTH;
+			break;
+		case EAST:
+			if (aGrid.getCell(aThisCell).hasEast())
+				lDirection = aGrid.getCell(aThisCell).getEast().getCoordinate();
+			else
+				continue;
+			lMovement = EAST;
+			break;
+		}
+		// Check if next node valid to traverse to.
+		for (int j = 0; j < aVisited.size(); j++)
+			if (lDirection == aVisited[j])
+				lVisited = true;
+
+		if (lVisited)
+			break;
+
+		// Crucial data section. locked with mutex lock
+		std::vector<Cardinal> lPathToDirection = aPathToHere;
+		lPathToDirection.push_back(lMovement);
+		lPathToCells.push_back(lPathToDirection);
+		lValidCells.push_back(lDirection);
+
+		gMtx.lock();
+		aVisited.push_back(lDirection);
+		gMtx.unlock();
+	}
+	CUS2NewThreads(aGrid, lValidCells, aVisited, lPathToCells, aGoalFound, aPathToGoal);
+}
+
+void CUS2NewThreads(Grid & aGrid, std::vector<Coordinate> aCellsToCheck, std::vector<Coordinate>& aVisited, std::vector<std::vector<Cardinal>> aPathToCells, bool & aGoalFound, std::vector<Cardinal>& aPathToGoal)
+{
+	/*
+	// Setup Threads
+	std::vector<std::thread> lThreads;
+	for (int i = 0; i < aCellsToCheck.size(); i++)
+		lThreads.push_back(new std::thread(CUS2Thread, aGrid, aCellsToCheck[i], aVisited, aPathToCells[i], aGoalFound, aPathToGoal));
+	// Execute Threds
+	for (auto& lTh : lThreads)
+		lTh.join();
+		*/
+	for (int i = 0; i < aCellsToCheck.size(); i++)
+		CUS2Thread(aGrid, aCellsToCheck[i], aVisited, aPathToCells[i], aGoalFound, aPathToGoal);
 }
 
 int HeuristicCostEstimate(Grid::Cell & aFrom, Grid::Cell & aTo)
