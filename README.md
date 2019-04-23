@@ -8,14 +8,12 @@ This repository contains the solution developed for COS30019 - Intro to artifici
 ## Search Algorithems
 This program implements the following Search Algorithms:
 
-Depth-first Search: Select one option, try it, go back when ther are no more options.
-Breadth-first Search: Expand all options one level at a time.
-
-Greedy Best-first: Use only the cost to reach the goal from the current node to evaluate the node.
-A* ("A Star"): Use both the cost to reach the goal from the current node and the cost to reach this node to evaluate the node.
-
-Custom Search Stratagy 1: An uninformed method to find a path to reach the goal.
-Custom Search Stratagy 2: An informed method to find a shortest path (with least moves) to reach the goal.
+* Depth-first Search: Select one option, try it, go back when ther are no more options.
+* Breadth-first Search: Expand all options one level at a time.
+* Greedy Best-first: Use only the cost to reach the goal from the current node to evaluate the node.
+* A* ("A Star"): Use both the cost to reach the goal from the current node and the cost to reach this node to evaluate the node.
+* Custom Search Stratagy 1: An uninformed method to find a path to reach the goal.
+* Custom Search Stratagy 2: An informed method to find a shortest path (with least moves) to reach the goal.
 
 ## Implementaion
 The implementation of the solution included not only development of the search algorithems but also the enviroment and loading processes for the AI agent to operate within.
