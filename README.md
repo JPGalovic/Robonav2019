@@ -179,8 +179,15 @@ All algorithms contained within single executible, algorithm switching achived t
 
 While the agent moves a display of the enviroment is presented to the user so that the path may not oly bve read the path but also visualise the enviroment and how the agent manovers arround the enviroment, this is perticually useful for understanding the un-informed methods.
 
+### Bugs & Missing Features
+BUG - Backtracking Failue when executing Bredth First Search Algorithm
+Agent will continute to move systematically until a goal is found, and thanks to the methods of movement been correct the agent will move correctly and (in all tested cases) navigate to a goal.
+Bug is suspected to be cause by the process used for backtracking to the starting point, in conjunction with a possible error in queueing due to error in reading visited list. alternitivly, the error could exist due to the method been used to track path back to origin.
+Further diagnosis is required to correctly determine and fix cause.
 
-## Research
+BUG - Threading in CUS2 algorithm.
+Due to my inexperiance in C++ threading (at this time), when attempting to inintalise threads to analise the valid nodes (equivilant of froming queue in BFS algorithm).
+Bug is cause of CUS2 algorithm to be ineffective.
 
 ## Conclusion
 
