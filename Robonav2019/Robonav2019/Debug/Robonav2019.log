@@ -1,35 +1,34 @@
 ﻿  Agent.cpp
-e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(149): warning C4018: '<': signed/unsigned mismatch
-e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(164): warning C4018: '<': signed/unsigned mismatch
-e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(216): warning C4018: '<': signed/unsigned mismatch
-e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(236): warning C4018: '<': signed/unsigned mismatch
-e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(256): warning C4018: '<': signed/unsigned mismatch
-e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(276): warning C4018: '<': signed/unsigned mismatch
-e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(294): warning C4018: '<': signed/unsigned mismatch
-e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(299): warning C4018: '<': signed/unsigned mismatch
-e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(315): warning C4018: '<': signed/unsigned mismatch
-e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(340): warning C4018: '<': signed/unsigned mismatch
-e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(360): warning C4018: '<': signed/unsigned mismatch
-e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(380): warning C4018: '<': signed/unsigned mismatch
-e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(423): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(153): warning C4018: '<': signed/unsigned mismatch
+e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(168): warning C4018: '<': signed/unsigned mismatch
+e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(220): warning C4018: '<': signed/unsigned mismatch
+e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(240): warning C4018: '<': signed/unsigned mismatch
+e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(260): warning C4018: '<': signed/unsigned mismatch
+e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(280): warning C4018: '<': signed/unsigned mismatch
+e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(298): warning C4018: '<': signed/unsigned mismatch
+e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(303): warning C4018: '<': signed/unsigned mismatch
+e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(319): warning C4018: '<': signed/unsigned mismatch
+e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(344): warning C4018: '<': signed/unsigned mismatch
+e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(364): warning C4018: '<': signed/unsigned mismatch
+e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(384): warning C4018: '<': signed/unsigned mismatch
+e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(427): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(512): warning C4018: '<': signed/unsigned mismatch
 e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(514): warning C4018: '<': signed/unsigned mismatch
-e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(516): warning C4018: '<': signed/unsigned mismatch
-e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(570): warning C4018: '<': signed/unsigned mismatch
-e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(578): warning C4018: '<': signed/unsigned mismatch
-e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(635): warning C4018: '<': signed/unsigned mismatch
-e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(643): warning C4018: '<': signed/unsigned mismatch
-e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(665): warning C4018: '<': signed/unsigned mismatch
-e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(708): warning C4018: '<': signed/unsigned mismatch
-e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(710): warning C4018: '<': signed/unsigned mismatch
-e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(764): warning C4018: '<': signed/unsigned mismatch
-e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(772): warning C4018: '<': signed/unsigned mismatch
-e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(829): warning C4018: '<': signed/unsigned mismatch
-e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(837): warning C4018: '<': signed/unsigned mismatch
-e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(851): warning C4018: '<': signed/unsigned mismatch
-e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(878): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(886): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-  Printers.cpp
-  Source.cpp
-e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\source.cpp(58): warning C4018: '<': signed/unsigned mismatch
-  Generating Code...
+e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(568): warning C4018: '<': signed/unsigned mismatch
+e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(576): warning C4018: '<': signed/unsigned mismatch
+e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(633): warning C4018: '<': signed/unsigned mismatch
+e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(641): warning C4018: '<': signed/unsigned mismatch
+e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(655): warning C4018: '<': signed/unsigned mismatch
+e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(704): warning C4018: '<': signed/unsigned mismatch
+e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(706): warning C4018: '<': signed/unsigned mismatch
+e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(760): warning C4018: '<': signed/unsigned mismatch
+e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(768): warning C4018: '<': signed/unsigned mismatch
+e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(825): warning C4018: '<': signed/unsigned mismatch
+e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(833): warning C4018: '<': signed/unsigned mismatch
+e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(855): warning C4018: '<': signed/unsigned mismatch
+e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(880): warning C4018: '<': signed/unsigned mismatch
+e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(938): warning C4018: '<': signed/unsigned mismatch
+e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(969): warning C4018: '<': signed/unsigned mismatch
+e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(983): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+e:\onedrive\scratch\cppscratch\robonav2019\robonav2019\agent.cpp(991): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
   Robonav2019.vcxproj -> E:\Onedrive\Scratch\CPPScratch\Robonav2019\Debug\Robonav2019.exe

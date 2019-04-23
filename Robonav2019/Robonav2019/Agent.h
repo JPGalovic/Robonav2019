@@ -45,6 +45,8 @@ std::vector<Cardinal> CUS1(Agent & aAgent);
 std::vector<Cardinal> GBFS(Agent & aAgent, Grid & aGrid);
 std::vector<Cardinal> AS(Agent & aAgent, Grid & aGrid);
 std::vector<Cardinal> CUS2(Agent & aAgent, Grid & aGrid);
+void CUS2Thread(Grid & aGrid, Coordinate aThisCell, std::vector<Coordinate>& aVisited, std::vector<Cardinal> aPathToHere, bool & aGoalFound, std::vector<Cardinal> & aPathToGoal);
+void CUS2NewThreads(Grid & aGrid, std::vector<Coordinate> aCellsToCheck, std::vector<Coordinate> & aVisited, std::vector<std::vector<Cardinal>> aPathCells, bool & aGoalFound, std::vector<Cardinal> & aPathToGoal);
 
 // Aux Functions
 int HeuristicCostEstimate(Grid::Cell & aFrom, Grid::Cell & aTo);
