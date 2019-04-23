@@ -190,7 +190,11 @@ Due to my inexperiance in C++ threading (at this time), when attempting to inint
 Bug is cause of CUS2 algorithm to be ineffective.
 
 ## Conclusion
+In simmilar cases to this I would use an A* algorithem, as this is a simple maze solver and the goal is not flexable nor is there a competing entity (player or otherwise). other search method may be used depending on what changes are made to the base task.
 
-## References
+## Acknowledgements/Resorces
+Both the bredth-first search and depth-first search algorithms are taught in the unit, Data Structures and Patterns, the algorithems were developed based on knowledge learned in that unit.
 
+The a* algorithm was transposed and improved from a previous attempt of this unit.
 
+The custom altorithems were developed as an experiment researching into effective useses of a agent lifespan (CUS1) and an experiment in threaded search algorithems (CUS2)
