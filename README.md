@@ -171,7 +171,14 @@ each thread will assess a single node, producing aditional threads to assess val
       start new thread to visit();
 ```
 
+once the goal has been found the agent 
+
 ## Featurs/Bugs/Missing
+### Notable Features
+All algorithms contained within single executible, algorithm switching achived through program arguments, when launching the programs you can slect from any of the above-mentioned algorithms, simply use the correct code, DFS, BFS, GBFS, AS, CUS1 or CUS2. the program will load the enviroment from file and then execute the chosen algorithem.
+
+While the agent moves a display of the enviroment is presented to the user so that the path may not oly bve read the path but also visualise the enviroment and how the agent manovers arround the enviroment, this is perticually useful for understanding the un-informed methods.
+
 
 ## Research
 
