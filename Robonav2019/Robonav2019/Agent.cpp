@@ -11,6 +11,7 @@
 
 std::mutex gMtx; // Mutex for thread locking
 
+// Agent Constructor
 Agent::Agent(Grid & aGrid)
 {
 	fLocation = aGrid.getStartingLocation();
